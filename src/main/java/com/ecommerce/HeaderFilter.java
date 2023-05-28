@@ -9,6 +9,8 @@ public class HeaderFilter implements Filter {
         HttpServletResponse httpResponse = (HttpServletResponse) response;
         // Thiết lập X-Frame-Options để chống clickjacking
         httpResponse.setHeader("X-Frame-Options", "DENY");
+        // Thiết lập X-Content Type
+        httpResponse.setHeader("X-Content-Type-Options", "nosniff");
         chain.doFilter(request, response);
     }
     public void init(FilterConfig config) throws ServletException {}
