@@ -1,3 +1,5 @@
+<%@ page import="org.owasp.encoder.Encode" %>
+<jsp:useBean id="pageId" scope="request" type="java.lang.String"/>
 <%@ page contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -102,7 +104,7 @@
                             <div class="btn-group float-right ml-3">
                                 <c:forEach begin="1" end="${numberOfPages}" var="i">
                                     <a id="${i}" style="color: #444342"
-                                       href="view_category?id=${category.categoryId}&sort=${sort}&page=${i}">&nbsp${i}&nbsp</a>
+                                       href="view_category?id=${category.categoryId}&sort=${Encode.forUri(sort)}&page=${i}">&nbsp${i}&nbsp</a>
                                 </c:forEach>
                             </div>
                         </div>
@@ -153,7 +155,8 @@
     document.getElementById('${category.name}').style.color = "#c2ab87";
 </script>
 <script>
-    document.getElementById('${pageId}').style.color = "#c2ab87";
+    const jsNumber = parseInt("<%=Encode.forJavaScript(pageId)%>").toString();
+    document.getElementById(jsNumber).style.color = "#c2ab87";
 </script>
 <script>
     let btn = $('#btn-backtop');

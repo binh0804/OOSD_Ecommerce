@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <jsp:useBean id="loggedCustomer" scope="session" type="com.ecommerce.model.entity.Customer"/>
 <%@ page contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>

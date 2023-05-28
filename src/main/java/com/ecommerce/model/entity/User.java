@@ -1,5 +1,7 @@
 package com.ecommerce.model.entity;
 
+import com.ecommerce.utility.InputValidator;
+
 import javax.persistence.*;
 
 import static javax.persistence.GenerationType.IDENTITY;
@@ -27,9 +29,11 @@ public class User {
 
 	public User(String email, String password, String fullName) {
 		super();
-		this.email = email;
-		this.password = password;
-		this.fullName = fullName;
+		if(InputValidator.isValidEmail(email) && InputValidator.isValidUsername(fullName) && InputValidator.isValidPassword(password)) {
+			this.email = email;
+			this.password = password;
+			this.fullName = fullName;
+		}
 	}
 
 	@Id

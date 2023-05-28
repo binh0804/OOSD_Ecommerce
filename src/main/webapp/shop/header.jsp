@@ -1,8 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<<<<<<< HEAD
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-=======
->>>>>>> 922d4c5a5bcdc3f8b6d24bcd181b7f68d03161c8
 
 <a id="btn-backtop"></a>
 <section class="header text-center">
