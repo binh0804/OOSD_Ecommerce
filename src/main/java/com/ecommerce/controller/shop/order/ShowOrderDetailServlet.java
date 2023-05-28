@@ -21,5 +21,4 @@ public class ShowOrderDetailServlet extends HttpServlet {
 		OrderService orderService = new OrderService(request, response);
 		orderService.showOrderDetailForCustomer();
 	}
-
 }

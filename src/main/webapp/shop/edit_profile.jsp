@@ -74,8 +74,7 @@
                             <div class="form-group">
                                 <label for="state"><i class="zmdi zmdi-lock"></i></label>
                                 <input type="text" name="state" id="state" placeholder="Your city."
-                                       value="${fn:escapeXml(loggedCustomer.state)}"
-                                       required="required" maxlength="32"/>
+                                       value="${fn:escapeXml(loggedCustomer.state)}" />
                             </div>
 
                             <div class="form-group">
