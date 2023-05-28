@@ -4,6 +4,7 @@ import com.ecommerce.model.dao.CustomerDAO;
 import com.ecommerce.model.dao.OrderDAO;
 import com.ecommerce.model.dao.ReviewDAO;
 import com.ecommerce.model.entity.Customer;
+import com.ecommerce.utility.CSRFTokenUtil;
 import com.ecommerce.utility.HashUtility;
 import com.ecommerce.utility.InputValidator;
 
@@ -192,7 +193,8 @@ public class CustomerService {
 
 	public void showCustomerRegisterForm() throws ServletException, IOException {
 		generateCountryList(request);
-
+		String csrfToken = CSRFTokenUtil.generateCSRFToken(request);
+		request.setAttribute("csrfToken",csrfToken);
 		forwardToPage("shop/register_form.jsp", request, response);
 	}
 
@@ -221,6 +223,8 @@ public class CustomerService {
 	}
 
 	public void showLogin() throws ServletException, IOException {
+		String csrfToken = CSRFTokenUtil.generateCSRFToken(request);
+		request.setAttribute("csrfToken",csrfToken);
 		forwardToPage("shop/login.jsp", request, response);
 	}
 

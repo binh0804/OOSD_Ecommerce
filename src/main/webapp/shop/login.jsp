@@ -31,7 +31,11 @@
                         </c:if>
 
                         <form method="post" action="login" class="register-form">
-
+                            <input type="hidden" name="csrfToken"
+                            <c:if test="${csrfToken != null}">
+                                   value="${csrfToken}"
+                            </c:if>
+                            >
                             <div class="form-group">
                                 <label><i
                                         class="zmdi zmdi-account material-icons-name"></i></label> <input
