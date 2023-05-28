@@ -1,5 +1,7 @@
+<jsp:useBean id="message" scope="application" type="java.lang.String"/>
 <%@ page contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
+<%@ page import="org.owasp.encoder.Encode" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,7 +26,7 @@
                             <br>
                             <br>
                             <br>
-                            <h3>${message}</h3>
+                            <h3>${Encode.forHtmlContent(message)}</h3>
                         </div>
                     </div>
 

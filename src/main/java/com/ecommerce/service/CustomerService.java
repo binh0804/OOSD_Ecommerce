@@ -5,6 +5,7 @@ import com.ecommerce.model.dao.OrderDAO;
 import com.ecommerce.model.dao.ReviewDAO;
 import com.ecommerce.model.entity.Customer;
 import com.ecommerce.utility.HashUtility;
+import com.ecommerce.utility.InputValidator;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -45,13 +46,13 @@ public class CustomerService {
 	}
 
 	private void updateCustomerFields(Customer customer) {
-		String email = request.getParameter("email");
-		String firstName = request.getParameter("firstName");
-		String lastName = request.getParameter("lastName");
+		String email = InputValidator.getValidEmail(request.getParameter("email"));
+		String firstName = InputValidator.sanitizeInput(request.getParameter("firstName"));
+		String lastName = InputValidator.sanitizeInput(request.getParameter("lastName"));
 		String password = request.getParameter("password");
 		String phone = request.getParameter("phone");
-		String addressLine1 = request.getParameter("addressLine1");
-		String addressLine2 = request.getParameter("addressLine2");
+		String addressLine1 = InputValidator.sanitizeInput(request.getParameter("addressLine1"));
+		String addressLine2 = InputValidator.sanitizeInput(request.getParameter("addressLine2"));
 		String city = request.getParameter("city");
 		String state = request.getParameter("state");
 		String zipCode = request.getParameter("zipCode");
@@ -85,7 +86,14 @@ public class CustomerService {
 	}
 
 	public void createCustomer() throws ServletException, IOException {
-		String email = request.getParameter("email");
+		String email = InputValidator.getValidEmail(request.getParameter("email"));
+
+		if (email == null) {
+			messageForShop("Could not update user. User with Invalid input.", request,
+					response);
+			return;
+		}
+
 		Customer existCustomer = customerDAO.findByEmail(email);
 
 		if (existCustomer != null) {
@@ -207,8 +215,13 @@ public class CustomerService {
 	}
 
 	public void doLogin() throws ServletException, IOException {
-		String email = request.getParameter("email");
+		String email = InputValidator.getValidEmail(request.getParameter("email"));
 		String password = request.getParameter("password");
+		if (email == null) {
+			messageForShop("Could not update user. User with Invalid input.", request,
+					response);
+			return;
+		}
 
 		Customer customer = customerDAO.findByEmailAndPassword(email, password);
 

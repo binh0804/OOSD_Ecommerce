@@ -1,3 +1,5 @@
+<jsp:useBean id="loggedCustomer" scope="session" type="com.ecommerce.model.entity.Customer"/>
+<%@ page import="org.owasp.encoder.Encode" %>
 <%@ page contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
 <!DOCTYPE html>
@@ -30,57 +32,56 @@
                             <div class="form-group">
                                 <label><i class="zmdi zmdi-account material-icons-name"></i></label>
                                 <input type="text" name="firstName" placeholder="Your first name."
-                                       value="${loggedCustomer.firstName}" required="required" maxlength="32"/>
+                                       value="${fn:escapeXml(loggedCustomer.firstName)}" required="required" maxlength="32"/>
                             </div>
 
                             <div class="form-group">
                                 <label><i class="zmdi zmdi-account material-icons-name"></i></label>
                                 <input type="text" name="lastName" placeholder="Your first name."
-                                       value="${loggedCustomer.lastName}" required="required" maxlength="32"/>
+                                       value="${fn:escapeXml(loggedCustomer.lastName)}" required="required" maxlength="32"/>
                             </div>
 
                             <div class="form-group">
                                 <label><i class="zmdi zmdi-email"></i></label>
                                 <input type="email" name="email" placeholder="Your email." readonly="readonly"
-                                       value="${loggedCustomer.email}"/>
+                                       value="${fn:escapeXml(loggedCustomer.email)}"/>
                                 <i>Email cannot be changed</i>
                             </div>
 
                             <div class="form-group">
                                 <label><i class="zmdi zmdi-lock"></i></label>
                                 <input type="number" name="phone" placeholder="Your phone number."
-                                       value="${loggedCustomer.phone}" required="required" maxlength="16"/>
+                                       value="${fn:escapeXml(loggedCustomer.phone)}" required="required" maxlength="16"/>
                             </div>
 
                             <div class="form-group">
                                 <label><i class="zmdi zmdi-lock"></i></label>
                                 <input type="text" name="addressLine1" placeholder="Your Address Line 1."
-                                       value="${loggedCustomer.addressLine1}" required="required" maxlength="128"/>
+                                       value="${fn:escapeXml(loggedCustomer.addressLine1)}" required="required" maxlength="128"/>
                             </div>
 
                             <div class="form-group">
                                 <label><i class="zmdi zmdi-lock"></i></label>
                                 <input type="text" name="addressLine2" placeholder="Your Address Line 2."
-                                       value="${loggedCustomer.addressLine2}" required="required" maxlength="128"/>
+                                       value="${fn:escapeXml(loggedCustomer.addressLine2)}" required="required" maxlength="128"/>
                             </div>
 
                             <div class="form-group">
                                 <label><i class="zmdi zmdi-lock"></i></label>
-                                <input type="text" name="city" placeholder="Your city." value="${loggedCustomer.city}"
+                                <input type="text" name="city" placeholder="Your city." value="${fn:escapeXml(loggedCustomer.city)}"
                                        required="required" maxlength="32"/>
                             </div>
 
                             <div class="form-group">
                                 <label for="state"><i class="zmdi zmdi-lock"></i></label>
                                 <input type="text" name="state" id="state" placeholder="Your city."
-                                       value="${loggedCustomer.state}"
-                                       required="required" maxlength="32"/>
+                                       value="${fn:escapeXml(loggedCustomer.state)}" />
                             </div>
 
                             <div class="form-group">
                                 <label for="zipCode"><i class="zmdi zmdi-lock"></i></label>
                                 <input type="text" name="zipCode" id="zipCode" placeholder="Your zip code."
-                                       value="${loggedCustomer.zipCode}"/>
+                                       value="${fn:escapeXml(loggedCustomer.zipCode)}"/>
                             </div>
 
                             <div class="form-group">

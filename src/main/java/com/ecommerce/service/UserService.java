@@ -3,6 +3,8 @@ package com.ecommerce.service;
 import com.ecommerce.model.dao.UserDAO;
 import com.ecommerce.model.entity.User;
 import com.ecommerce.utility.HashUtility;
+import com.ecommerce.utility.InputValidator;
+import org.owasp.encoder.Encode;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -11,142 +13,161 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
-import static com.ecommerce.utility.CommonUtility.forwardToPage;
-import static com.ecommerce.utility.CommonUtility.messageForAdmin;
+import static com.ecommerce.utility.CommonUtility.*;
 
 public class UserService {
-	private final UserDAO userDAO;
-	private final HttpServletRequest request;
-	private final HttpServletResponse response;
+    private final UserDAO userDAO;
+    private final HttpServletRequest request;
+    private final HttpServletResponse response;
 
-	public UserService(HttpServletRequest request, HttpServletResponse response) {
-		this.request = request;
-		this.response = response;
-		userDAO = new UserDAO();
-	}
+    public UserService(HttpServletRequest request, HttpServletResponse response) {
+        this.request = request;
+        this.response = response;
+        userDAO = new UserDAO();
+    }
 
-	public void listUser() throws ServletException, IOException {
-		listUser(null);
-	}
+    public void listUser() throws ServletException, IOException {
+        listUser(null);
+    }
 
-	public void listUser(String message) throws ServletException, IOException {
-		List<User> listUsers = userDAO.listAll();
+    public void listUser(String message) throws ServletException, IOException {
+        List<User> listUsers = userDAO.listAll();
 
-		request.setAttribute("listUsers", listUsers);
+        request.setAttribute("listUsers", listUsers);
 
-		if (message != null) {
-			request.setAttribute("message", message);
-		}
+        if (message != null) {
+            request.setAttribute("message", message);
+        }
 
-		forwardToPage("user_list.jsp", request, response);
-	}
+        forwardToPage("user_list.jsp", request, response);
+    }
 
-	public void createUser() throws ServletException, IOException {
-		String email = request.getParameter("email");
-		String password = request.getParameter("password");
-		String fullName = request.getParameter("fullName");
+    public void createUser() throws ServletException, IOException {
+        String email = InputValidator.getValidEmail(request.getParameter("email"));
+        String password = request.getParameter("password");
+        String fullName = InputValidator.getValidFullName(request.getParameter("fullName"));
 
-		User existUser = userDAO.findByEmail(email);
+        if (email == null) {
+            messageForShop("Could not update user. User with Invalid input.", request,
+                    response);
+            return;
+        }
 
-		if (existUser != null) {
-			messageForAdmin(String.format("Could not create new user. A user with email %s already exists.", email),
-					request, response);
+        User existUser = userDAO.findByEmail(email);
 
-		} else {
-			User newUser = new User(email, password, fullName);
-			userDAO.create(newUser);
+        String validEmail = Encode.forHtmlContent(email);
 
-			listUser("New user created successfully.");
-		}
-	}
+        if (existUser != null) {
+            messageForAdmin(String.format("Could not create new user. A user with email %s already exists.", validEmail),
+                    request, response);
 
-	public void editUser() throws ServletException, IOException {
-		int userId = Integer.parseInt(request.getParameter("id"));
-		User user = userDAO.get(userId);
+        } else {
+            User newUser = new User(email, password, fullName);
+            userDAO.create(newUser);
 
-		if (user == null) {
-			messageForAdmin(String.format("Could not find the user with ID %s or it might have been deleted.", userId),
-					request, response);
+            listUser("New user created successfully.");
+        }
+    }
 
-		} else {
-			user.setPassword(null);
-			request.setAttribute("user", user);
+    public void editUser() throws ServletException, IOException {
+        int userId = Integer.parseInt(request.getParameter("id"));
+        User user = userDAO.get(userId);
 
-			forwardToPage("user_form.jsp", request, response);
-		}
-	}
+        String validId = Encode.forHtmlContent(request.getParameter("id"));
 
-	public void updateUser() throws ServletException, IOException {
-		int userId = Integer.parseInt(request.getParameter("userId"));
-		String email = request.getParameter("email");
-		String checkPassword = request.getParameter("checkPassword");
-		String password = request.getParameter("password");
-		String fullName = request.getParameter("fullName");
+        if (user == null) {
+            messageForAdmin(String.format("Could not find the user with ID %s or it might have been deleted.", validId),
+                    request, response);
 
-		User userById = userDAO.get(userId);
-		User userByEmail = userDAO.findByEmail(email);
+        } else {
+            user.setPassword(null);
+            request.setAttribute("user", user);
 
-		boolean checkResult = userDAO.findByEmailAndPassword(email, checkPassword);
+            forwardToPage("user_form.jsp", request, response);
+        }
+    }
 
-		if (userByEmail != null && !Objects.equals(userByEmail.getUserId(), userById.getUserId())) {
-			messageForAdmin(String.format("Could not update user. User with email %s already exists.", email), request,
-					response);
+    public void updateUser() throws ServletException, IOException {
+        int userId = Integer.parseInt(request.getParameter("userId"));
+        String email = InputValidator.getValidEmail(request.getParameter("email"));
+        String checkPassword = request.getParameter("checkPassword");
+        String password = request.getParameter("password");
+        String fullName = InputValidator.getValidFullName(request.getParameter("fullName"));
+        if (email == null || fullName == null) {
+            messageForShop("Could not update user. User with Invalid input.", request,
+                    response);
+            return;
+        }
 
-		} else if (checkResult) {
-			userById.setEmail(email);
-			userById.setFullName(fullName);
+        User userById = userDAO.get(userId);
+        User userByEmail = userDAO.findByEmail(email);
 
-			if (password != null && !password.isEmpty()) {
-				String encryptedPassword = HashUtility.generateMD5(password);
-				userById.setPassword(encryptedPassword);
-			}
+        boolean checkResult = userDAO.findByEmailAndPassword(email, checkPassword);
 
-			userDAO.update(userById);
-			listUser("User has been updated successfully.");
+        if (userByEmail != null && !Objects.equals(userByEmail.getUserId(), userById.getUserId())) {
+            messageForAdmin(String.format("Could not update user. User with email %s already exists.", email), request,
+                    response);
 
-		} else {
-			messageForAdmin("Could not update user because the password is wrong.", request, response);
-		}
-	}
+        } else if (checkResult) {
+            userById.setEmail(email);
+            userById.setFullName(fullName);
 
-	public void deleteUser() throws ServletException, IOException {
-		int userId = Integer.parseInt(request.getParameter("id"));
-		User user = userDAO.get(userId);
+            if (password != null && !password.isEmpty()) {
+                String encryptedPassword = HashUtility.generateMD5(password);
+                userById.setPassword(encryptedPassword);
+            }
 
-		if (userId == 1) {
-			messageForAdmin("The default admin user account cannot be deleted.", request, response);
-			return;
-		}
+            userDAO.update(userById);
+            listUser("User has been updated successfully.");
 
-		if (user == null) {
-			messageForAdmin(String.format("Could not find the user with ID %s or it might have been deleted.", userId),
-					request, response);
+        } else {
+            messageForAdmin("Could not update user because the password is wrong.", request, response);
+        }
+    }
 
-		} else {
-			userDAO.delete(userId);
-			listUser("User has been deleted successfully.");
-		}
-	}
+    public void deleteUser() throws ServletException, IOException {
+        int userId = Integer.parseInt(request.getParameter("id"));
+        User user = userDAO.get(userId);
 
-	public void login() throws ServletException, IOException {
-		String email = request.getParameter("email");
-		String password = request.getParameter("password");
+        if (userId == 1) {
+            messageForAdmin("The default admin user account cannot be deleted.", request, response);
+            return;
+        }
 
-		boolean loginResult = userDAO.findByEmailAndPassword(email, password);
+        if (user == null) {
+            messageForAdmin(String.format("Could not find the user with ID %s or it might have been deleted.", userId),
+                    request, response);
 
-		if (loginResult) {
-			request.getSession().setAttribute("userEmail", email);
+        } else {
+            userDAO.delete(userId);
+            listUser("User has been deleted successfully.");
+        }
+    }
 
-			forwardToPage("/admin/", request, response);
+    public void login() throws ServletException, IOException {
+        String email = InputValidator.getValidEmail(request.getParameter("email"));
+        String password = request.getParameter("password");
+        if (email == null ) {
+            messageForShop("Could not update user. User with Invalid input.", request,
+                    response);
+            return;
+        }
 
-		} else {
-			forwardToPage("login.jsp", "Login failed.", request, response);
-		}
-	}
+        boolean loginResult = userDAO.findByEmailAndPassword(email, password);
 
-	public void logout() throws ServletException, IOException {
-		request.getSession().removeAttribute("userEmail");
+        if (loginResult) {
+            request.getSession().setAttribute("userEmail", email);
 
-		forwardToPage("login.jsp", request, response);
-	}
+            forwardToPage("/admin/", request, response);
+
+        } else {
+            forwardToPage("login.jsp", "Login failed.", request, response);
+        }
+    }
+
+    public void logout() throws ServletException, IOException {
+        request.getSession().removeAttribute("userEmail");
+
+        forwardToPage("login.jsp", request, response);
+    }
 }

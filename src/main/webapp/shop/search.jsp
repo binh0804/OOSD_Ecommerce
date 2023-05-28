@@ -1,3 +1,4 @@
+<jsp:useBean id="keyword" scope="request" type="java.lang.String"/>
 <%@ page contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -17,7 +18,7 @@
     <div class="row">
         <div class="col-md-4 col-lg-3 sidebar-filter">
             <h3 class="mt-5 mb-5">
-                Search: <span class="primary-color">${keyword}</span>
+                Search: <span class="primary-color"><c:out value="${keyword}" /></span>
             </h3>
         </div>
 

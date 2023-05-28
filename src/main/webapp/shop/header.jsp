@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <a id="btn-backtop"></a>
 <section class="header text-center">
@@ -114,7 +115,7 @@
                             <div class="flexbox">
                                 <div class="search">
                                     <div>
-                                        <input type="text" name="keyword" placeholder="Search . . .">
+                                        <input type="text" name="keyword" value="${fn:escapeXml(keyword)}" placeholder="Search . . .">
                                     </div>
                                 </div>
                             </div>

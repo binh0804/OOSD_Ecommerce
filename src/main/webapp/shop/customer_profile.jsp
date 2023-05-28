@@ -1,5 +1,7 @@
+<jsp:useBean id="loggedCustomer" scope="session" type="com.ecommerce.model.entity.Customer"/>
 <%@ page contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -25,43 +27,43 @@
                         <table class="form-group" style="border: 0">
                             <tr>
                                 <td><b>Email Address:</b></td>
-                                <td>${loggedCustomer.email}</td>
+                                <td><c:out value="${loggedCustomer.email}" /></td>
                             </tr>
                             <tr>
                                 <td><b>First Name:</b></td>
-                                <td>${loggedCustomer.firstName}</td>
+                                <td><c:out value="${loggedCustomer.firstName}" /></td>
                             </tr>
                             <tr>
                                 <td><b>Last Name:</b></td>
-                                <td>${loggedCustomer.lastName}</td>
+                                <td><c:out value="${loggedCustomer.lastName}" /></td>
                             </tr>
                             <tr>
                                 <td><b>Phone Number:</b></td>
-                                <td>${loggedCustomer.phone}</td>
+                                <td><c:out value="${loggedCustomer.phone}" /></td>
                             </tr>
                             <tr>
                                 <td><b>Address Line 1:</b></td>
-                                <td>${loggedCustomer.addressLine1}</td>
+                                <td><c:out value="${loggedCustomer.addressLine1}" /></td>
                             </tr>
                             <tr>
                                 <td><b>Address Line 2:</b></td>
-                                <td>${loggedCustomer.addressLine2}</td>
+                                <td><c:out value="${loggedCustomer.addressLine2}" /></td>
                             </tr>
                             <tr>
                                 <td><b>City:</b></td>
-                                <td>${loggedCustomer.city}</td>
+                                <td><c:out value="${loggedCustomer.city}" /></td>
                             </tr>
                             <tr>
                                 <td><b>State:</b></td>
-                                <td>${loggedCustomer.state}</td>
+                                <td><c:out value="${loggedCustomer.state}" /></td>
                             </tr>
                             <tr>
                                 <td><b>Zip Code:</b></td>
-                                <td>${loggedCustomer.zipCode}</td>
+                                <td><c:out value="${loggedCustomer.zipCode}" /></td>
                             </tr>
                             <tr>
                                 <td><b>Country:</b></td>
-                                <td>${loggedCustomer.countryName}</td>
+                                <td><c:out value="${loggedCustomer.countryName}" /></td>
                             </tr>
                             <tr>
                                 <td>&nbsp;</td>
