@@ -1,14 +1,12 @@
 <meta charset="UTF-8">
 <%
     response.setHeader("X-Frame-Options", "DENY");
-    response.setHeader("Content-Security-Policy",
-            "media-src 'self' https://lv-vod.fl.freecaster.net/vod/louisvuitton/dikq6kFFzG_HD.mp4; " +
-                    "style-src 'self' 'unsafe-inline' https://maxcdn.bootstrapcdn.com https://fonts.googleapis.com;" +
-                    "script-src 'self' 'unsafe-inline' http://code.jquery.com https://ajax.googleapis.com https://use.fontawesome.com ");
 %>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 
-<link rel="shortcut icon" href="shop/images/favicon.ico">
+<link rel="icon"
+      type="image/png"
+      href="${pageContext.request.contextPath}/shop/images/ic-logo.png">
 
 <link rel="stylesheet" href="${pageContext.request.contextPath}/shop/bootstrap/css/bootstrap.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/shop/css/bootstrap-slider.min.css">

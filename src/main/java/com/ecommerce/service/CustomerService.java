@@ -132,7 +132,12 @@ public class CustomerService {
 
 	public void updateCustomer() throws ServletException, IOException {
 		Integer customerId = Integer.parseInt(request.getParameter("customerId"));
-		String email = request.getParameter("email");
+		String email = InputValidator.getValidEmail(request.getParameter("email"));
+		if (email == null) {
+			messageForShop("Could not update user. User with Invalid input.", request,
+					response);
+			return;
+		}
 
 		Customer customerByEmail = customerDAO.findByEmail(email);
 
@@ -192,7 +197,12 @@ public class CustomerService {
 	}
 
 	public void registerCustomer() throws ServletException, IOException {
-		String email = request.getParameter("email");
+		String email = InputValidator.getValidEmail(request.getParameter("email"));
+		if (email == null) {
+			messageForShop("Could not update user. User with Invalid input.", request,
+					response);
+			return;
+		}
 		Customer existCustomer = customerDAO.findByEmail(email);
 
 		if (existCustomer != null) {

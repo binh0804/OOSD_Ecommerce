@@ -1,6 +1,7 @@
 package com.ecommerce.service;
 
 import com.ecommerce.utility.EmailUtility;
+import com.ecommerce.utility.InputValidator;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -43,7 +44,12 @@ public class ContactService {
 		List<File> uploadedFiles = saveUploadedFiles();
 
 		String recipient = context.getInitParameter("recipient");
-		String email = request.getParameter("email");
+		String email = InputValidator.getValidEmail(request.getParameter("email"));
+		if (email == null) {
+			messageForShop("Could not update user. User with Invalid input.", request,
+					response);
+			return;
+		}
 		String subject = request.getParameter("subject");
 		String content = request.getParameter("content");
 
