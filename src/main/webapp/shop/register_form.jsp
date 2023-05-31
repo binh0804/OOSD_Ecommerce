@@ -145,6 +145,10 @@
             rules: {
                 confirmPassword: {
                     equalTo: "#password"
+                },
+                password: {
+                    required: true,
+                    strongPassword: true
                 }
             },
 
@@ -155,5 +159,10 @@
             }
         });
     });
+
+    // Custom validation method for strong password
+    $.validator.addMethod("strongPassword", function (value, element) {
+        return this.optional(element) || /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/.test(value);
+    }, "Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character.");
 </script>
 </html>
