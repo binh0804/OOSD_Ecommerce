@@ -50,14 +50,14 @@
                             </div>
 
                             <div class="form-group">
-                                <label><i class="zmdi zmdi-lock"></i></label> <input
-                                    type="password" name="password" id="password"
-                                    placeholder="Your password."/>
+                                <label><i class="zmdi zmdi-lock"></i></label>
+                                <input type="password" name="password" id="password" placeholder="Your password." pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$" required="required" title="Minimum length 8 characters. At least one letter, one number and one special character."/>
                             </div>
+
 
                             <div class="form-group">
                                 <label><i class="zmdi zmdi-lock-outline"></i></label>
-                                <input type="password" name="confirmPassword" id="confirmPassword"
+                                <input type="password" name="confirmPassword" id="confirmPassword" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$"
                                        placeholder="Comfirm your password."/>
                             </div>
 
@@ -138,7 +138,7 @@
 <%@ include file="footer.jsp" %>
 
 <script src="shop/bootstrap/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="shop/js/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="shop/js/jquery-3.5.0.min.js"></script>
 <script type="text/javascript" src="shop/js/jquery.validate.min.js"></script>
 <script src="shop/js/tether.min.js"></script>
 <script src="shop/js/popper.min.js"></script>
@@ -161,4 +161,46 @@
         });
     });
 </script>
+<script type="text/javascript">
+    // Xử lý kiểm tra độ mạnh mật khẩu
+    var passwordInput = document.getElementById("password");
+    passwordInput.addEventListener("input", function() {
+        var password = passwordInput.value;
+
+        // Kiểm tra các yêu cầu
+        var lengthRegex = /.{8,}/; // Tối thiểu 8 ký tự
+        var uppercaseRegex = /[A-Z]/; // Một ký tự viết hoa
+        var lowercaseRegex = /[a-z]/; // Một ký tự viết thường
+        var numberRegex = /[0-9]/; // Một số
+        var specialCharRegex = /[\W_]/; // Một ký tự đặc biệt
+
+        var isLengthValid = lengthRegex.test(password);
+        var isUppercaseValid = uppercaseRegex.test(password);
+        var isLowercaseValid = lowercaseRegex.test(password);
+        var isNumberValid = numberRegex.test(password);
+        var isSpecialCharValid = specialCharRegex.test(password);
+
+        // Hiển thị thông báo lỗi
+        var errorMessage = "";
+        if (!isLengthValid) {
+            errorMessage += "Password must be at least 8 characters long. ";
+        }
+        if (!isUppercaseValid) {
+            errorMessage += "Password must contain at least one uppercase letter. ";
+        }
+        if (!isLowercaseValid) {
+            errorMessage += "Password must contain at least one lowercase letter. ";
+        }
+        if (!isNumberValid) {
+            errorMessage += "Password must contain at least one number. ";
+        }
+        if (!isSpecialCharValid) {
+            errorMessage += "Password must contain at least one special character. ";
+        }
+
+        var errorElement = document.getElementById("password-error");
+        errorElement.textContent = errorMessage;
+    });
+</script>
+
 </html>
