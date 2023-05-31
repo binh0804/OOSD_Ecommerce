@@ -45,30 +45,31 @@ public class CustomerService {
 		forwardToPage("customer_list.jsp", request, response);
 	}
 
-	private void updateCustomerFields(Customer customer) {
+	private Boolean updateCustomerFields(Customer customer) {
 		String email = InputValidator.getValidEmail(request.getParameter("email"));
 		String firstName = InputValidator.sanitizeInput(request.getParameter("firstName"));
 		String lastName = InputValidator.sanitizeInput(request.getParameter("lastName"));
 		String password = request.getParameter("password");
-		String phone = request.getParameter("phone");
+		String phone = InputValidator.sanitizeInput(request.getParameter("phone"));
 		String addressLine1 = InputValidator.sanitizeInput(request.getParameter("addressLine1"));
 		String addressLine2 = InputValidator.sanitizeInput(request.getParameter("addressLine2"));
-		String city = request.getParameter("city");
-		String state = request.getParameter("state");
-		String zipCode = request.getParameter("zipCode");
-		String country = request.getParameter("country");
+		String city = InputValidator.sanitizeInput(request.getParameter("city"));
+		String state = InputValidator.sanitizeInput(request.getParameter("state"));
+		String zipCode = InputValidator.sanitizeInput(request.getParameter("zipCode"));
+		String country = InputValidator.sanitizeInput(request.getParameter("country"));
 
-		if (email != null && !"".equals(email)) {
-			customer.setEmail(email);
-		}
+		if(email == null || email.equals("") || firstName.equals("") || lastName.equals("") || password.equals("") || phone.equals("")
+			|| addressLine1.equals("") || addressLine2.equals("") || city.equals("") || state.equals("") || zipCode.equals("")
+				|| country.equals("")
+		)
+			return false;
 
+		customer.setEmail(email);
 		customer.setFirstName(firstName);
 		customer.setLastName(lastName);
 
-		if (password != null && !"".equals(password)) {
-			String encryptedPassword = HashUtility.generateMD5(password);
-			customer.setPassword(encryptedPassword);
-		}
+		String encryptedPassword = HashUtility.generateMD5(password);
+		customer.setPassword(encryptedPassword);
 
 		customer.setPhone(phone);
 		customer.setAddressLine1(addressLine1);
@@ -77,6 +78,7 @@ public class CustomerService {
 		customer.setState(state);
 		customer.setZipCode(zipCode);
 		customer.setCountry(country);
+		return true;
 	}
 
 	public void showCustomerNewForm() throws ServletException, IOException {
@@ -199,7 +201,7 @@ public class CustomerService {
 	public void registerCustomer() throws ServletException, IOException {
 		String email = InputValidator.getValidEmail(request.getParameter("email"));
 		if (email == null) {
-			messageForShop("Could not update user. User with Invalid input.", request,
+			messageForShop("Could not register user with Invalid input.", request,
 					response);
 			return;
 		}
@@ -209,11 +211,16 @@ public class CustomerService {
 			messageForShop(
 					String.format("Could not register. The email %s is already registered by another customer.", email),
 					request, response);
-
 		} else {
 			Customer newCustomer = new Customer();
-			updateCustomerFields(newCustomer);
-			customerDAO.create(newCustomer);
+			Boolean isSuccess =  updateCustomerFields(newCustomer);
+			if(isSuccess)
+				customerDAO.create(newCustomer);
+			else {
+				messageForShop("Could not register user with Invalid input.", request,
+						response);
+				return;
+			}
 
 			messageForShop("You have registered successfully! Thank you.<br/><a href='login'>Click here</a> to login",
 					request, response);
@@ -256,9 +263,9 @@ public class CustomerService {
 		}
 	}
 
-	public void logout() throws IOException {
+	public void logout() throws IOException, ServletException {
 		request.getSession().removeAttribute("loggedCustomer");
-		response.sendRedirect(request.getContextPath());
+		forwardToPage(request.getContextPath(), request, response);
 	}
 
 	public void showCustomerProfile() throws ServletException, IOException {
