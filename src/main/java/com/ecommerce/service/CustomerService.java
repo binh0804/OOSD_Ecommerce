@@ -195,6 +195,7 @@ public class CustomerService {
 
 	public void showCustomerRegisterForm() throws ServletException, IOException {
 		generateCountryList(request);
+		//Set CSRF tokens vào header khi thực hiện đăng ký
 		String csrfToken = CSRFTokenUtil.generateCSRFToken(request);
 		request.setAttribute("csrfToken",csrfToken);
 		forwardToPage("shop/register_form.jsp", request, response);
@@ -231,6 +232,7 @@ public class CustomerService {
 
 	public void showLogin() throws ServletException, IOException {
 		String csrfToken = CSRFTokenUtil.generateCSRFToken(request);
+		//Set CSRF tokens vào header khi thực hiện đăng nhập
 		request.setAttribute("csrfToken",csrfToken);
 		forwardToPage("shop/login.jsp", request, response);
 	}

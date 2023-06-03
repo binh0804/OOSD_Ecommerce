@@ -165,7 +165,7 @@
         });
     });
 
-    // Custom validation method for strong password
+    //Chỉnh sửa lại ràng buộc của password để tăng độ mạnh cho password
     $.validator.addMethod("strongPassword", function (value, element) {
         return this.optional(element) || /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/.test(value);
     }, "Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character.");
